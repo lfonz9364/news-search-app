@@ -1,14 +1,10 @@
 import React, {useState} from 'react';
 import {Text, StyleSheet, View} from 'react-native';
 
-import {SearchResults} from './../types';
+import {NewsListProps} from '../types';
 import {ListItem, Image} from '@rneui/themed';
 
-const NewsList = ({
-  searchResults,
-}: {
-  searchResults: SearchResults;
-}): React.JSX.Element => {
+const NewsList = ({searchResults}: NewsListProps): React.JSX.Element => {
   const [expanded, setExpanded] = useState<boolean>(false);
 
   return (

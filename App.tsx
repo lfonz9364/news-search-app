@@ -40,28 +40,32 @@ const App = (): React.JSX.Element => {
           }}>
           <SearchBox onSearchResultReturned={setResults} />
         </View>
-        {results?.map((result, i) => {
-          const date = new Date(result.publishedAt).toDateString();
-          return (
-            <ListItem.Accordion
-              content={
-                <>
+        {results?.map(
+          ({publishedAt, author, description, title, source: {name}}, i) => {
+            const date = new Date(publishedAt).toDateString();
+            return (
+              <ListItem.Accordion
+                content={
+                  <>
+                    <ListItem.Content>
+                      <ListItem.Title>{title}</ListItem.Title>
+                    </ListItem.Content>
+                  </>
+                }
+                isExpanded={expanded}
+                onPress={() => setExpanded(!expanded)}>
+                <ListItem key={`{result.title} ${i}`} bottomDivider>
                   <ListItem.Content>
-                    <ListItem.Title>{result.title}</ListItem.Title>
+                    <Text>{date}</Text>
+                    <Text>{`By:${author}`}</Text>
+                    <Text>{description}</Text>
+                    <Text>{`Source: ${name}`}</Text>
                   </ListItem.Content>
-                </>
-              }
-              isExpanded={expanded}
-              onPress={() => setExpanded(!expanded)}>
-              <ListItem key={`{result.title} ${i}`} bottomDivider>
-                <ListItem.Content>
-                  <Text>{date}</Text>
-                  <Text>{result.description}</Text>
-                </ListItem.Content>
-              </ListItem>
-            </ListItem.Accordion>
-          );
-        })}
+                </ListItem>
+              </ListItem.Accordion>
+            );
+          },
+        )}
       </ScrollView>
     </SafeAreaView>
   );

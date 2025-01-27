@@ -1,61 +1,23 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
   StatusBar,
-  StyleSheet,
   Text,
+  StyleSheet,
   useColorScheme,
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+import SearchBox from './components/SearchBox/SearchBox';
+import {SearchResult} from './components/SearchBox/types';
+import {ListItem} from '@rneui/themed';
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function App(): React.JSX.Element {
+const App = (): React.JSX.Element => {
+  const [results, setResults] = useState<[SearchResult] | null>(null);
+  const [expanded, setExpanded] = useState<boolean>(false);
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -71,47 +33,47 @@ function App(): React.JSX.Element {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <Header />
+        <Text style={styles.title}>Search News App</Text>
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+          <SearchBox onSearchResultReturned={setResults} />
         </View>
+        {results?.map((result, i) => {
+          const date = new Date(result.publishedAt).toDateString();
+          return (
+            <ListItem.Accordion
+              content={
+                <>
+                  <ListItem.Content>
+                    <ListItem.Title>{result.title}</ListItem.Title>
+                  </ListItem.Content>
+                </>
+              }
+              isExpanded={expanded}
+              onPress={() => setExpanded(!expanded)}>
+              <ListItem key={`{result.title} ${i}`} bottomDivider>
+                <ListItem.Content>
+                  <Text>{date}</Text>
+                  <Text>{result.description}</Text>
+                </ListItem.Content>
+              </ListItem>
+            </ListItem.Accordion>
+          );
+        })}
       </ScrollView>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
+  title: {
     fontSize: 24,
     fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+    margin: 'auto',
+    marginTop: 20,
+    marginBottom: 20,
   },
 });
 

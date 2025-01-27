@@ -1,18 +1,25 @@
 import React, {useState} from 'react';
 import {SafeAreaView, ScrollView, Text, StyleSheet} from 'react-native';
-import SearchBox from './components/SearchBox/SearchBox';
 import {SearchResults} from './components/types';
-import NewsList from './components/NewsList/NewsList';
+
+import SearchBox from './components/SearchBox';
+import NewsList from './components/NewsList';
+import ErrorDialog from './components/ErrorDialog';
 
 const App = (): React.JSX.Element => {
   const [results, setResults] = useState<SearchResults>(null);
+  const [showError, setShowError] = useState<boolean>(false);
 
   return (
     <SafeAreaView>
       <ScrollView contentInsetAdjustmentBehavior="automatic" style={{}}>
         <Text style={styles.title}>Search News App</Text>
-        <SearchBox onSearchResultReturned={setResults} />
+        <SearchBox onSearchResultReturned={setResults} onError={setShowError} />
         <NewsList searchResults={results} />
+        <ErrorDialog
+          isVisible={showError}
+          onClose={() => setShowError(false)}
+        />
       </ScrollView>
     </SafeAreaView>
   );

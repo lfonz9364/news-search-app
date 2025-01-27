@@ -6,13 +6,18 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {SearchBar} from '@rneui/themed';
 
 import {SearchBoxProps} from './types';
+
 import axios from 'axios';
+
+import Config from 'react-native-config';
 
 const SearchBox = ({
   onSearchResultReturned,
 }: SearchBoxProps): React.JSX.Element => {
   const [keyword, setKeyword] = useState('');
   const isDarkMode = useColorScheme() === 'dark';
+  const apiURL = Config.API_URL;
+  const apiKey = Config.API_KEY;
 
   const searchNews = (search: string) => {
     setKeyword(search);
@@ -21,7 +26,7 @@ const SearchBox = ({
   const getNews = async () => {
     try {
       const responses = await axios.get(
-        `https://newsapi.org/v2/everything?q=${keyword}&apiKey=cfad3163d4e14ddcbc73bbb7abbf7dda&pageSize=10`,
+        `${apiURL}/everything?q=${keyword}&apiKey=${apiKey}&pageSize=10`,
       );
       console.log(responses);
       onSearchResultReturned(responses.data.articles);
@@ -31,7 +36,9 @@ const SearchBox = ({
   };
 
   useEffect(() => {
-    Promise.resolve(getNews());
+    if (keyword !== '') {
+      Promise.resolve(getNews());
+    }
   });
 
   return (

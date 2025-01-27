@@ -18,6 +18,16 @@ export type SearchResult = {
 
 export type SearchResults = [SearchResult] | [] | null;
 
+export type NewsListProps = {
+  searchResults: SearchResults;
+};
+
 export type SearchBoxProps = {
   onSearchResultReturned: Dispatch<SetStateAction<SearchResults>>;
+  onError: Dispatch<SetStateAction<boolean>>;
+};
+
+export type ErrorDialogProps = {
+  isVisible: boolean;
+  onClose: () => void;
 };

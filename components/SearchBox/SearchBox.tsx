@@ -21,7 +21,7 @@ const SearchBox = ({
   const getNews = async () => {
     try {
       const responses = await axios.get(
-        'https://newsapi.org/v2/everything?q=Trump&apiKey=183daca270264bad86fc5b72972fb82a',
+        `https://newsapi.org/v2/everything?q=${keyword}&apiKey=183daca270264bad86fc5b72972fb82a`,
       );
       console.log(responses);
       onSearchResultReturned(responses.data.articles);

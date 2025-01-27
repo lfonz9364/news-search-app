@@ -11,6 +11,8 @@ import axios from 'axios';
 
 import Config from 'react-native-config';
 
+import {useDebounce} from '../../helpers/Utils';
+
 const SearchBox = ({
   onSearchResultReturned,
 }: SearchBoxProps): React.JSX.Element => {
@@ -18,6 +20,8 @@ const SearchBox = ({
   const isDarkMode = useColorScheme() === 'dark';
   const apiURL = Config.API_URL;
   const apiKey = Config.API_KEY;
+  const newsPerPage = Config.PAGE_SIZE;
+  const debouncedKeyword = useDebounce(keyword);
 
   const searchNews = (search: string) => {
     setKeyword(search);
@@ -26,9 +30,8 @@ const SearchBox = ({
   const getNews = async () => {
     try {
       const responses = await axios.get(
-        `${apiURL}/everything?q=${keyword}&apiKey=${apiKey}&pageSize=10`,
+        `${apiURL}/everything?q=${debouncedKeyword}&apiKey=${apiKey}&pageSize=${newsPerPage}`,
       );
-      console.log(responses);
       onSearchResultReturned(responses.data.articles);
     } catch (e) {
       console.error(e);
@@ -39,7 +42,8 @@ const SearchBox = ({
     if (keyword !== '') {
       Promise.resolve(getNews());
     }
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedKeyword]);
 
   return (
     <View

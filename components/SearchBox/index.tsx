@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, useColorScheme, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 import {SearchBar} from '@rneui/themed';
 
-import {SearchBoxProps} from './types';
+import {SearchBoxProps} from '../types';
 
 import axios from 'axios';
 
@@ -15,9 +15,9 @@ import {useDebounce} from '../../helpers/Utils';
 
 const SearchBox = ({
   onSearchResultReturned,
+  onError,
 }: SearchBoxProps): React.JSX.Element => {
   const [keyword, setKeyword] = useState('');
-  const isDarkMode = useColorScheme() === 'dark';
   const apiURL = Config.API_URL;
   const apiKey = Config.API_KEY;
   const newsPerPage = Config.PAGE_SIZE;
@@ -34,7 +34,7 @@ const SearchBox = ({
       );
       onSearchResultReturned(responses.data.articles);
     } catch (e) {
-      console.error(e);
+      onError(true);
     }
   };
 
@@ -46,13 +46,7 @@ const SearchBox = ({
   }, [debouncedKeyword]);
 
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          backgroundColor: isDarkMode ? Colors.black : Colors.white,
-        },
-      ]}>
+    <View style={styles.container}>
       <SearchBar
         placeholder="Search for news"
         onChangeText={searchNews}
@@ -66,6 +60,7 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 32,
     paddingHorizontal: 24,
+    backgroundColor: Colors.white,
   },
 });
 

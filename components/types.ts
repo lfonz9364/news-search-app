@@ -16,6 +16,8 @@ export type SearchResult = {
   content: string;
 };
 
+export type SearchResults = [SearchResult] | [] | null;
+
 export type SearchBoxProps = {
-  onSearchResultReturned: Dispatch<SetStateAction<[SearchResult] | null>>;
+  onSearchResultReturned: Dispatch<SetStateAction<SearchResults>>;
 };

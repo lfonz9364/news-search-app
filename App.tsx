@@ -1,71 +1,18 @@
 import React, {useState} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  Text,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from 'react-native';
-
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-
+import {SafeAreaView, ScrollView, Text, StyleSheet} from 'react-native';
 import SearchBox from './components/SearchBox/SearchBox';
-import {SearchResult} from './components/SearchBox/types';
-import {ListItem} from '@rneui/themed';
+import {SearchResults} from './components/types';
+import NewsList from './components/NewsList/NewsList';
 
 const App = (): React.JSX.Element => {
-  const [results, setResults] = useState<[SearchResult] | null>(null);
-  const [expanded, setExpanded] = useState<boolean>(false);
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  const [results, setResults] = useState<SearchResults>(null);
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
+    <SafeAreaView>
+      <ScrollView contentInsetAdjustmentBehavior="automatic" style={{}}>
         <Text style={styles.title}>Search News App</Text>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <SearchBox onSearchResultReturned={setResults} />
-        </View>
-        {results?.map(
-          ({publishedAt, author, description, title, source: {name}}, i) => {
-            const date = new Date(publishedAt).toDateString();
-            return (
-              <ListItem.Accordion
-                content={
-                  <>
-                    <ListItem.Content>
-                      <ListItem.Title>{title}</ListItem.Title>
-                    </ListItem.Content>
-                  </>
-                }
-                isExpanded={expanded}
-                onPress={() => setExpanded(!expanded)}>
-                <ListItem key={`{result.title} ${i}`} bottomDivider>
-                  <ListItem.Content>
-                    <Text>{date}</Text>
-                    <Text>{`By:${author}`}</Text>
-                    <Text>{description}</Text>
-                    <Text>{`Source: ${name}`}</Text>
-                  </ListItem.Content>
-                </ListItem>
-              </ListItem.Accordion>
-            );
-          },
-        )}
+        <SearchBox onSearchResultReturned={setResults} />
+        <NewsList searchResults={results} />
       </ScrollView>
     </SafeAreaView>
   );

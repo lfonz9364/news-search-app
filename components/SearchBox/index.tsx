@@ -39,7 +39,7 @@ const SearchBox = ({
   };
 
   useEffect(() => {
-    if (keyword !== '') {
+    if (debouncedKeyword !== '') {
       Promise.resolve(getNews());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

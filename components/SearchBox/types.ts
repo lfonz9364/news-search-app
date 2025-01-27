@@ -1,4 +1,4 @@
-import {Dispatch} from 'react';
+import {Dispatch, SetStateAction} from 'react';
 
 type Source = {
   id: string;
@@ -17,5 +17,5 @@ export type SearchResult = {
 };
 
 export type SearchBoxProps = {
-  onSearchResultReturned: Dispatch<SetStateAction<SearchResult | null>>;
+  onSearchResultReturned: Dispatch<SetStateAction<[SearchResult] | null>>;
 };
